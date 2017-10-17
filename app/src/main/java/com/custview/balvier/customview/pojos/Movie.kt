@@ -1,4 +1,4 @@
-package com.custview.balvier.customview
+package com.custview.balvier.customview.pojos
 
 /**
  * Created by Balvier on 10/15/2017.

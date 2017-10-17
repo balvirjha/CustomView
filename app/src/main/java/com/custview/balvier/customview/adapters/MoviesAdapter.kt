@@ -1,10 +1,12 @@
-package com.custview.balvier.customview
+package com.custview.balvier.customview.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.custview.balvier.customview.pojos.Movie
+import com.custview.balvier.customview.R
 import kotlinx.android.synthetic.main.movie_list_row.view.*
 
 
