@@ -1,5 +1,8 @@
 package com.custview.balvier.customview.ui
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Uri
@@ -10,30 +13,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.custview.balvier.customview.R
+import com.custview.balvier.customview.model.WeatherModel
 import com.custview.balvier.customview.pojos.WeatherPOJO
 import com.custview.balvier.customview.presenter.WeatherPresenter
-import com.custview.balvier.customview.restservices.Weatherrepository
+import com.custview.balvier.customview.repository.Weatherrepository
 import com.felipecsl.gifimageview.library.GifImageView
 import kotlinx.android.synthetic.main.fragment_repo.*
 import okhttp3.Cache
 
 
-class RepoFragment : Fragment(), WeatherPresenter.ResponseWeatherData {
+class RepoFragment : Fragment(), Observer<WeatherPOJO> {
 
-    override fun successWeatherData(weatherPOJO: WeatherPOJO) {
-        Log.e("bvc", "response successfull")
-        cityName.text = weatherPOJO.name
-        temp.text = weatherPOJO.main?.temp.toString()
-        humidity.text = weatherPOJO.main?.humidity.toString()
-        wind.text = weatherPOJO.wind?.speed.toString() + " " + weatherPOJO.wind?.deg.toString()
-        sunrise.text = weatherPOJO.sys?.sunrise.toString()
-        sunset.text = weatherPOJO.sys?.sunset.toString()
+    private lateinit var viewModel: WeatherModel;
 
-    }
-
-    override fun failedWeatherData(message: String) {
-        Log.e("bvc", "response not successfull")
-
+    override fun onChanged(weatherPOJO: WeatherPOJO?) {
+        if (activity != null && !activity.isFinishing) {
+            Log.e("bvc", "response successfull")
+            cityName.text = weatherPOJO?.name
+            temp.text = weatherPOJO?.main?.temp.toString()
+            humidity.text = weatherPOJO?.main?.humidity.toString()
+            wind.text = weatherPOJO?.wind?.speed.toString() + " " + weatherPOJO?.wind?.deg.toString()
+            sunrise.text = weatherPOJO?.sys?.sunrise.toString()
+            sunset.text = weatherPOJO?.sys?.sunset.toString()
+        }
     }
 
     private var mListener: OnFragmentInteractionListener? = null
@@ -66,17 +68,9 @@ class RepoFragment : Fragment(), WeatherPresenter.ResponseWeatherData {
         super.onActivityCreated(savedInstanceState)
         var imageWeather = mRoot?.findViewById<GifImageView>(R.id.imageWeather)
         imageWeather?.startAnimation()
-        if (activity.isNetworkAvailable()) {
-            Weatherrepository().getWeatherData(this, Cache(activity.getCacheDir(), 10 * 1024 * 1024L))
-            Log.e("bvc", "internet available")
-        }
+        viewModel = ViewModelProviders.of(this).get(WeatherModel::class.java)
+        viewModel.getWeatherData().observe(this, this)
 
-    }
-
-    fun onButtonPressed(uri: Uri) {
-        if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
-        }
     }
 
     override fun onAttach(context: Context?) {
