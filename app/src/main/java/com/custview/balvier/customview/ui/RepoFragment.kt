@@ -1,7 +1,6 @@
 package com.custview.balvier.customview.ui
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.ConnectivityManager
@@ -15,16 +14,13 @@ import android.view.ViewGroup
 import com.custview.balvier.customview.R
 import com.custview.balvier.customview.model.WeatherModel
 import com.custview.balvier.customview.pojos.WeatherPOJO
-import com.custview.balvier.customview.presenter.WeatherPresenter
-import com.custview.balvier.customview.repository.Weatherrepository
 import com.felipecsl.gifimageview.library.GifImageView
 import kotlinx.android.synthetic.main.fragment_repo.*
-import okhttp3.Cache
 
 
 class RepoFragment : Fragment(), Observer<WeatherPOJO> {
 
-    private lateinit var viewModel: WeatherModel;
+    private lateinit var viewModel: WeatherModel
 
     override fun onChanged(weatherPOJO: WeatherPOJO?) {
         if (activity != null && !activity.isFinishing) {
@@ -52,11 +48,11 @@ class RepoFragment : Fragment(), Observer<WeatherPOJO> {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         mRoot = inflater!!.inflate(R.layout.fragment_repo, container, false)
-        return mRoot;
+        return mRoot
     }
 
     fun Context.isNetworkAvailable(): Boolean {
-        var connectivitymanager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager;
+        var connectivitymanager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (connectivitymanager.activeNetworkInfo.isConnected)
             return true
 
