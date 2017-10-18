@@ -11,11 +11,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.custview.balvier.customview.R
 import com.custview.balvier.customview.model.WeatherModel
 import com.custview.balvier.customview.pojos.WeatherPOJO
-import com.felipecsl.gifimageview.library.GifImageView
 import kotlinx.android.synthetic.main.fragment_repo.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class RepoFragment : Fragment(), Observer<WeatherPOJO> {
@@ -29,8 +31,12 @@ class RepoFragment : Fragment(), Observer<WeatherPOJO> {
             temp.text = weatherPOJO?.main?.temp.toString()
             humidity.text = weatherPOJO?.main?.humidity.toString()
             wind.text = weatherPOJO?.wind?.speed.toString() + " " + weatherPOJO?.wind?.deg.toString()
-            sunrise.text = weatherPOJO?.sys?.sunrise.toString()
-            sunset.text = weatherPOJO?.sys?.sunset.toString()
+            var cal: Calendar = Calendar.getInstance()
+            cal.timeInMillis = weatherPOJO?.sys?.sunrise.toString().toLong()
+            sunrise.text = SimpleDateFormat("hh:mm").format(cal.time)
+            var cal1: Calendar = Calendar.getInstance()
+            cal1.timeInMillis = weatherPOJO?.sys?.sunset.toString().toLong()
+            sunset.text = SimpleDateFormat("hh:mm").format(cal1.time)
         }
     }
 
@@ -62,8 +68,12 @@ class RepoFragment : Fragment(), Observer<WeatherPOJO> {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        var imageWeather = mRoot?.findViewById<GifImageView>(R.id.imageWeather)
-        imageWeather?.startAnimation()
+        var imageWeather = mRoot?.findViewById<ImageView>(R.id.imageWeather)
+
+//        GlideApp.with(this)
+//                .load("https://www.pinterest.com/pin/516928863460594822/")
+//                .centerInside()
+//                .into(imageWeather)
         viewModel = ViewModelProviders.of(this).get(WeatherModel::class.java)
         viewModel.getWeatherData().observe(this, this)
 
@@ -81,11 +91,6 @@ class RepoFragment : Fragment(), Observer<WeatherPOJO> {
     override fun onDetach() {
         super.onDetach()
         mListener = null
-    }
-
-    override fun onStop() {
-        super.onStop()
-        imageWeather?.stopAnimation()
     }
 
     interface OnFragmentInteractionListener {
