@@ -1,5 +1,6 @@
 package com.custview.balvier.customview.presenter
 
+import com.custview.balvier.customview.pojos.WeatherList
 import com.custview.balvier.customview.pojos.WeatherPOJO
 
 /**
@@ -10,5 +11,10 @@ interface WeatherPresenter {
     interface ResponseWeatherData {
         fun successWeatherData(weatherPOJO: WeatherPOJO)
         fun failedWeatherData(message: String)
+    }
+
+    interface ResponseForecastData {
+        fun successForecastData(weatherPOJO: WeatherList)
+        fun failedForecastData(message: String)
     }
 }

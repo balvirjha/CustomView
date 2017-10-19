@@ -5,19 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.custview.balvier.customview.pojos.Movie
 import com.custview.balvier.customview.R
+import com.custview.balvier.customview.pojos.CityList
 import kotlinx.android.synthetic.main.movie_list_row.view.*
 
 
 /**
  * Created by Balvier on 10/15/2017.
  */
-class MoviesAdapter(var moviesList: List<Movie>, val listener: OnItemClickListener) : RecyclerView.Adapter<MoviesAdapter.MyViewHolder>() {
+class MoviesAdapter(var moviesList: List<CityList>, val listener: OnItemClickListener) : RecyclerView.Adapter<MoviesAdapter.MyViewHolder>() {
 
     companion object {
-        public interface OnItemClickListener {
-            fun OnItemClick(movie: Movie)
+        interface OnItemClickListener {
+            fun OnItemClick(movie: CityList)
         }
     }
 
@@ -27,15 +27,13 @@ class MoviesAdapter(var moviesList: List<Movie>, val listener: OnItemClickListen
 
     override fun getItemCount(): Int = moviesList.size
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyViewHolder = MyViewHolder(LayoutInflater.from(parent?.getContext())
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyViewHolder = MyViewHolder(LayoutInflater.from(parent?.context)
             .inflate(R.layout.movie_list_row, parent, false))
 
     inner class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bindItems(movie: Movie) {
-            view.title?.text = movie.title
-            view.genre?.text = movie.genre
-            view.year?.text = movie.year
+        fun bindItems(movie: CityList) {
+            view.cityName?.text = movie.name
 
             view.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(p0: View?) {

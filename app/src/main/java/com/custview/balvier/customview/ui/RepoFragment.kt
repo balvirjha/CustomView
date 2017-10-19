@@ -12,7 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.custview.balvier.customview.ApplicationClass
 import com.custview.balvier.customview.R
+import com.custview.balvier.customview.model.ForecastModel
 import com.custview.balvier.customview.model.WeatherModel
 import com.custview.balvier.customview.pojos.WeatherPOJO
 import kotlinx.android.synthetic.main.fragment_repo.*
@@ -23,14 +25,26 @@ import java.util.*
 class RepoFragment : Fragment(), Observer<WeatherPOJO> {
 
     private lateinit var viewModel: WeatherModel
+    private lateinit var forecastModel: ForecastModel
+
+    companion object {
+        fun Context.isNetworkAvailable(): Boolean {
+            var connectivitymanager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            if (connectivitymanager.activeNetworkInfo.isConnected)
+                return true
+
+            return false
+
+        }
+    }
 
     override fun onChanged(weatherPOJO: WeatherPOJO?) {
-        if (activity != null && !activity.isFinishing) {
+        if (activity != null && !activity.isFinishing && ApplicationClass.getApplicationInstance().isNetworkAvailable()) {
             Log.e("bvc", "response successfull")
             cityName.text = weatherPOJO?.name
-            temp.text = weatherPOJO?.main?.temp.toString()
-            humidity.text = weatherPOJO?.main?.humidity.toString()
-            wind.text = weatherPOJO?.wind?.speed.toString() + " " + weatherPOJO?.wind?.deg.toString()
+            temp.text = ((weatherPOJO?.main?.temp?.minus(273.15))?.toInt()).toString() + "\u00b0" + "C"
+            humidity.text = weatherPOJO?.main?.humidity.toString() + " % "
+            wind.text = weatherPOJO?.wind?.speed.toString() + "  m/s "
             var cal: Calendar = Calendar.getInstance()
             cal.timeInMillis = weatherPOJO?.sys?.sunrise.toString().toLong()
             sunrise.text = SimpleDateFormat("hh:mm").format(cal.time)
@@ -53,22 +67,15 @@ class RepoFragment : Fragment(), Observer<WeatherPOJO> {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        Log.e("bvc", "onCreateView crated called")
         mRoot = inflater!!.inflate(R.layout.fragment_repo, container, false)
         return mRoot
-    }
-
-    fun Context.isNetworkAvailable(): Boolean {
-        var connectivitymanager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivitymanager.activeNetworkInfo.isConnected)
-            return true
-
-        return false
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         var imageWeather = mRoot?.findViewById<ImageView>(R.id.imageWeather)
+        Log.e("bvc", "onActivity crated called")
 
 //        GlideApp.with(this)
 //                .load("https://www.pinterest.com/pin/516928863460594822/")

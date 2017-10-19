@@ -33,6 +33,7 @@ class WeatherRepos : Callback<WeatherPOJO> {
 
     fun getWeatherData(cache: Cache, responseWeatherData: WeatherPresenter.ResponseWeatherData) {
         this.responseWeatherData = responseWeatherData
+
         RetrofitClient.getRetrofitClient(cache).create(WeatherAPI::class.java)
                 .weatherData("Mumbai", ApplicationClass.getAppId()).enqueue(this)
     }
